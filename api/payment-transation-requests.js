@@ -1,5 +1,5 @@
 import request from 'request';
-import config from '../../config';
+import config from '../config';
 
 const authorizationDefaults = {
     'Content-Type': 'application/json;charset=UTF-8',

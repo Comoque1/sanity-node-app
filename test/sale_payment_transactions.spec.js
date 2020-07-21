@@ -2,7 +2,7 @@
 
 import { expect } from "chai";
 import "regenerator-runtime/runtime.js";
-import { sale_request } from "../api/payment_transactions/requests";
+import { sale_request } from "../api/payment-transation-requests";
 import config from '../config';
 
 export const saleTransactionDefaults = ({
@@ -19,7 +19,7 @@ export const saleTransactionDefaults = ({
 
 const auth = ({
   'Content-Type': 'application/json;charset=UTF-8',
-  "Authorization": config.getValidAuthToken()
+  "Authorization": config.getInvalidAuthToken()
 });
 
 describe('Sale payment transaction', function () {
@@ -31,6 +31,15 @@ describe('Sale payment transaction', function () {
     //Assert
     expect(response.statusCode).to.be.equal(200);
     expect(parsedResponse.status).to.be.equal('approved');
+    expect(parsedResponse.message).to.be.equal('Your transaction has been approved.');
+  });
+
+  it('should not be authorized', async function () {
+    // Act
+    let response = await sale_request({ saleTransactionDefaults }, auth);
+
+    //Assert
+    expect(response.statusCode).to.be.equal(401);
   });
 
 });
