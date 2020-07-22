@@ -3,7 +3,7 @@
 import { expect } from "chai";
 import "regenerator-runtime/runtime.js";
 import { saleRequest, voidRequest } from "../api/payment-transation-requests";
-import { saleTransactionDefaults } from './sale_payment_transactions.spec';
+import { saleTransactionDefaults } from './sale-payment-transactions.spec';
 
 describe('Void payment transactions', function () {
   beforeEach(async function () {
@@ -51,7 +51,7 @@ describe('Void payment transactions', function () {
     expect(parsedResponseToExistingVoid.reference_id[0]).to.be.contain('Invalid reference transaction!');
   });
 
-  it('should not be processed - invalid void reference_id, async function', async function () {
+  it('should not be processed - invalid void reference_id', async function () {
     // Act
     let voidResponse = await voidRequest('invalid void reference_id');
     let voidParsedResponse = JSON.parse(voidResponse.body);

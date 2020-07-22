@@ -23,7 +23,6 @@ const auth = ({
 });
 
 
-
 describe('Sale payment transaction', function () {
   it('should be sent and approved', async function () {
     // Act
@@ -54,15 +53,7 @@ describe('Sale payment transaction', function () {
     expect(parsedResponse.message).to.be.equal('Your transaction has been declined.');
   });
 
-  it('should not be authorized', async function () {
-    // Act
-    let response = await saleRequest({ saleTransactionDefaults }, auth);
-
-    //Assert
-    expect(response.statusCode).to.be.equal(401);
-  });
-
-  it('should not be processed invalid transaction_type', async function () {
+  it('should not be processed - invalid transaction_type', async function () {
     // Act
     let response = await undefinedRequest();
     let parsedResponse = JSON.parse(response.body);
@@ -72,8 +63,7 @@ describe('Sale payment transaction', function () {
     expect(parsedResponse.transaction_type[0]).to.be.equal('is not included in the list');
   });
 
-  // ToDo
-  it('should not be processed invalid expiration_date', async function () {
+  it('should not be processed - invalid expiration_date', async function () {
     // Act
     let response = await saleRequest({
       ...saleTransactionDefaults,
@@ -87,6 +77,13 @@ describe('Sale payment transaction', function () {
     expect(parsedResponse.message).to.be.equal('Your transaction has been declined.');
   });
 
+  it('should not be authorized', async function () {
+    // Act
+    let response = await saleRequest({ saleTransactionDefaults }, auth);
+
+    //Assert
+    expect(response.statusCode).to.be.equal(401);
+  });
 });
 
 describe('Card number: Data Driven tests', function () {
