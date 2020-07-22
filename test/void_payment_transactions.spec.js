@@ -4,7 +4,6 @@ import { expect } from "chai";
 import "regenerator-runtime/runtime.js";
 import { saleRequest, voidRequest } from "../api/payment-transation-requests";
 import { saleTransactionDefaults } from './sale_payment_transactions.spec';
-import { async } from "regenerator-runtime/runtime.js";
 
 describe('Void payment transactions', function () {
   beforeEach(async function () {

@@ -4,12 +4,11 @@ import { expect } from "chai";
 import "regenerator-runtime/runtime.js";
 import { saleRequest, undefinedRequest } from "../api/payment-transation-requests";
 import config from '../config';
-import moment from 'moment';
 
 export const saleTransactionDefaults = ({
   "card_number": "4200000000000000",
   "cvv": "123",
-  "expiration_date": "06/2019",
+  "expiration_date": "08/2040",
   "amount": "500",
   "usage": "Coffeemaker",
   "transaction_type": "sale",
@@ -33,6 +32,7 @@ describe('Sale payment transaction', function () {
 
     //Assert
     expect(response.statusCode).to.be.equal(200);
+    expect(parsedResponse.unique_id).not.to.be.null;
     expect(parsedResponse.status).to.be.equal('approved');
     expect(parsedResponse.usage).to.be.equal('Coffeemaker');
     expect(parsedResponse.amount).to.be.equal(500);
@@ -62,17 +62,29 @@ describe('Sale payment transaction', function () {
     expect(response.statusCode).to.be.equal(401);
   });
 
-  it('should not be processed', async function () {
+  it('should not be processed invalid transaction_type', async function () {
     // Act
-    let response = await undefinedRequest({
-      ...saleTransactionDefaults,
-      transaction_type: ''
-    });
+    let response = await undefinedRequest();
     let parsedResponse = JSON.parse(response.body);
 
     //Assert
     expect(response.statusCode).to.be.equal(422);
     expect(parsedResponse.transaction_type[0]).to.be.equal('is not included in the list');
+  });
+
+  // ToDo
+  it('should not be processed invalid expiration_date', async function () {
+    // Act
+    let response = await saleRequest({
+      ...saleTransactionDefaults,
+      expiration_date: '07/1777'
+    });
+    let parsedResponse = JSON.parse(response.body);
+
+    //Assert
+    expect(response.statusCode).to.be.equal(406);
+    expect(parsedResponse.status).to.be.equal('declined');
+    expect(parsedResponse.message).to.be.equal('Your transaction has been declined.');
   });
 
 });
@@ -132,7 +144,6 @@ describe('Amount: Data Driven tests', function () {
     { 'amountValue': '0', 'errorMessage': 'must be greater than 0' },
     { 'amountValue': 'test', 'errorMessage': 'is not a number' },
     { 'amountValue': ' ', 'errorMessage': 'can\'t be blank' },
-    //{ 'amountValue': '2147483648', 'errorMessage': 'must be less than 2147483648' } // Completed 500 Internal Server Error in 7ms (ActiveRecord: 0.2ms)  ActiveModel::RangeError (4200000000000000 is out of range for ActiveRecord::ConnectionAdapters::SQLite3Adapter::SQLite3Integer with limit 4 bytes):
   ];
 
   params.forEach(({ amountValue, errorMessage }) => {
@@ -148,6 +159,20 @@ describe('Amount: Data Driven tests', function () {
       expect(response.statusCode).to.be.equal(422);
       expect(parsedResponse.amount[0]).to.be.equal(errorMessage);
     });
+  });
+
+  it(`should return error 'statusCode: 422' for amount '2147483648' `, async function () {
+    // Arrange
+    let amountValue = '2147483648'; // the value is equal to the intMax
+
+    // Act
+    let response = await saleRequest({
+      ...saleTransactionDefaults,
+      amount: amountValue
+    });
+
+    //Assert
+    expect(response.statusCode).to.be.equal(422);
   });
 });
 
