@@ -7,7 +7,7 @@ const authorizationDefaults = {
 }
 
 export const undefinedRequest = (params, headers) => {
-    return postTransactionRequest(params, headers)
+    return postTransactionRequest(params, headers,'')
 };
 
 export const saleRequest = (params, headers) => {
@@ -40,12 +40,5 @@ export const postTransactionRequest = (params, headers, transactionType) => {
             };
             resolve(response);
         })
-    });
-};
-
-export const deleteTransactionRequest = (transactioId) => {
-    return new Promise(function (resolve, reject) {
-        resolve(transactioId)
-        // Delete the transactions generated after the test is ru
     });
 };

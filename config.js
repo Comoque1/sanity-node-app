@@ -11,10 +11,10 @@ function toApiConfig(jsonConfig) {
             return `http://${jsonConfig.host}:${jsonConfig.port}/${path}`
         },
         getValidAuthToken: () => {
-            return jsonConfig.validAuthorization
+            return jsonConfig.validAuthorizationToken
         },
         getInvalidAuthToken: () => {
-            return jsonConfig.invalidAuthorization
+            return jsonConfig.invalidAuthorizationToken
         }
     }
 }
