@@ -6,11 +6,15 @@ const authorizationDefaults = {
     'Authorization': config.getValidAuthToken()
 }
 
-export const sale_request = (params, headers) => {
+export const undefinedRequest = (params, headers) => {
+    return postTransactionRequest(params, headers)
+};
+
+export const saleRequest = (params, headers) => {
     return postTransactionRequest(params, headers, 'sale')
 };
 
-export const void_request = (reference_id, headers) => {
+export const voidRequest = (reference_id, headers) => {
     return postTransactionRequest({ reference_id }, headers, 'void')
 };
 

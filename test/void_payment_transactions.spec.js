@@ -2,12 +2,12 @@
 
 import { expect } from "chai";
 import "regenerator-runtime/runtime.js";
-import { deleteTransactionRequest, sale_request, void_request } from "../api/payment-transation-requests";
+import { deleteTransactionRequest, saleRequest, voidRequest } from "../api/payment-transation-requests";
 import { saleTransactionDefaults } from './sale_payment_transactions.spec';
 
 describe('Void payment transactions', function () {
   before(async function () {
-    let response = await sale_request(saleTransactionDefaults);
+    let response = await saleRequest(saleTransactionDefaults);
     let parsedResponse = JSON.parse(response.body);
     this.saleTransactionId = parsedResponse.unique_id;
   })
@@ -18,7 +18,7 @@ describe('Void payment transactions', function () {
 
   it('should be sent and approved', async function () {
     // Act
-    let response = await void_request(this.saleTransactionId)
+    let response = await voidRequest(this.saleTransactionId)
     let parsedResponse = JSON.parse(response.body);
 
     //Assert
@@ -29,10 +29,10 @@ describe('Void payment transactions', function () {
 
   it('should be invalid - void transition using void valid reference_id', async function () {
     // Act
-    let response = await void_request(this.saleTransactionId)
+    let response = await voidRequest(this.saleTransactionId)
     let parsedResponse = JSON.parse(response.body);
     let voidTransactionId = parsedResponse.unique_id;
-    let responseToExistingVoidTransaction = await void_request(voidTransactionId);
+    let responseToExistingVoidTransaction = await voidRequest(voidTransactionId);
     let parsedResponseToExistingVoid = JSON.parse(responseToExistingVoidTransaction.body);
 
     //Assert
@@ -42,7 +42,7 @@ describe('Void payment transactions', function () {
 
   it('should be invalid - void transition using invalid reference_id', async function () {
     // Act
-    let response = await void_request('invalid reference_id')
+    let response = await voidRequest('invalid reference_id')
     let parsedResponse = JSON.parse(response.body);
 
     //Assert
