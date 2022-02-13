@@ -8,7 +8,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "follow-redirects": "^1.12.1",
+    "follow-redirects": "^1.14.8",
     "regenerator-runtime": "^0.13.5",
     "request": "^2.88.2"
   },
